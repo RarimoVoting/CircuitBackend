@@ -11,7 +11,7 @@ import (
 
 const PRIVATE_KEY_FILE_NAME = "private.txt"
 
-func GetPrivateKey() babyjub.PrivKeyScalar {
+func GetPrivateKey() babyjub.PrivateKey {
 	privateKeyString, exist := getPrivateKeyIfExist(PRIVATE_KEY_FILE_NAME)
 
 	if !exist {
@@ -19,14 +19,14 @@ func GetPrivateKey() babyjub.PrivKeyScalar {
 	}
 	privateKeyInt := big.NewInt(0)
 	privateKeyInt.SetString(privateKeyString, 10)
-	return *babyjub.NewPrivKeyScalar(privateKeyInt)
+	return babyjub.PrivateKey(privateKeyInt.Bytes())
 }
 
-func initNewPrivateKey() babyjub.PrivKeyScalar {
+func initNewPrivateKey() babyjub.PrivateKey {
 	privKey := babyjub.NewRandPrivKey()
 	privKeyString := privKey.Scalar().BigInt().String()
 	createAndWriteToFile(PRIVATE_KEY_FILE_NAME, privKeyString)
-	return *privKey.Scalar()
+	return privKey
 }
 
 func createAndWriteToFile(fileName string, data string) {

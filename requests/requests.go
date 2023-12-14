@@ -24,11 +24,11 @@ func HandleVerifyPhoto(context echo.Context) error {
 
 	verificationHash := cryptography.PoseidonHashLeftRight(hashRealPhoto, hashPassportPhoto)
 
-	signature := cryptography.EddsaSignature(*verificationHash)
+	signature := cryptography.EddsaSignature(verificationHash)
 
 	return context.JSON(http.StatusOK, map[string]any{
 		"photoHash": verificationHash.String(),
-		"signature": signature.String(),
+		"signature": signature,
 	})
 }
 
