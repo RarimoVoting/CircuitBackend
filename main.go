@@ -1,14 +1,12 @@
 package main
 
 import (
-	"redsunsetbackend/cryptography"
 	"redsunsetbackend/requests"
 
 	"github.com/labstack/echo/v4"
 )
 
 func main() {
-	cryptography.GetPrivateKey()
 	e := echo.New()
 
 	e.GET("/verifyPhoto", requests.HandleVerifyPhoto)
@@ -17,4 +15,5 @@ func main() {
 	e.GET("/providerList", requests.HandleSignerInclusionProof)
 	e.POST("/updateMerkleRoot", requests.HandleUpdateMerkleRoot)
 
+	e.Start(":3000")
 }

@@ -12,7 +12,9 @@ import (
 func HandleVerifyPhoto(context echo.Context) error {
 	var imageVerificationRequest ImageVerificationRequest
 	if err := json.NewDecoder(context.Request().Body).Decode(&imageVerificationRequest); err != nil {
-		return err
+		return context.JSON(http.StatusBadRequest, map[string]any{
+			"msg": "Unable to parse a request",
+		})
 	}
 	if !verification.Verify(imageVerificationRequest.PhotoReal.ImageBytes, imageVerificationRequest.PhotoPassport.ImageBytes) {
 		return context.JSON(http.StatusBadRequest, map[string]any{
