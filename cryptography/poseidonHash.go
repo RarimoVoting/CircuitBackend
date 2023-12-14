@@ -15,3 +15,10 @@ func PoseidonHash(data []byte) *big.Int {
 
 	return hash
 }
+
+func PoseidonHashLeftRight(left *big.Int, right *big.Int) *big.Int {
+	input := []*big.Int{left, right}
+
+	hash, _ := poseidon.Hash(input)
+	return hash
+}

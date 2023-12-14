@@ -3,6 +3,7 @@ module redsunsetbackend
 go 1.21.4
 
 require (
+	github.com/dchest/blake512 v1.0.0 // indirect
 	github.com/iden3/go-iden3-crypto v0.0.15 // indirect
 	github.com/labstack/echo/v4 v4.11.3 // indirect
 	github.com/labstack/gommon v0.4.0 // indirect
