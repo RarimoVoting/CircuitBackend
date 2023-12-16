@@ -3,6 +3,7 @@ package cryptography
 import (
 	"math/big"
 
+	"github.com/iden3/go-iden3-crypto/babyjub"
 	"github.com/iden3/go-iden3-crypto/poseidon"
 )
 
@@ -21,4 +22,8 @@ func PoseidonHashLeftRight(left *big.Int, right *big.Int) *big.Int {
 
 	hash, _ := poseidon.Hash(input)
 	return hash
+}
+
+func PoseidonHashPoint(point *babyjub.Point) *big.Int {
+	return PoseidonHashLeftRight(point.X, point.Y)
 }

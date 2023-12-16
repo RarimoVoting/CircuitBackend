@@ -11,6 +11,11 @@ import (
 
 const PRIVATE_KEY_FILE_NAME = "private.txt"
 
+func GetPublicKey() *babyjub.Point {
+	privateKey := GetPrivateKey()
+	return privateKey.Public().Point()
+}
+
 func GetPrivateKey() babyjub.PrivateKey {
 	privateKeyString, exist := getPrivateKeyIfExist(PRIVATE_KEY_FILE_NAME)
 
