@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"redsunsetbackend/cryptography"
 	"redsunsetbackend/merkletree"
+	"redsunsetbackend/messages"
 	"redsunsetbackend/verification"
 
 	"github.com/labstack/echo/v4"
@@ -15,12 +16,12 @@ func HandleVerifyPhoto(context echo.Context) error {
 	var imageVerificationRequest ImageVerificationRequest
 	if err := json.NewDecoder(context.Request().Body).Decode(&imageVerificationRequest); err != nil {
 		return context.JSON(http.StatusBadRequest, map[string]any{
-			"msg": "Unable to parse a request",
+			"msg": messages.UNABLE_TO_PARSE_REQUEST,
 		})
 	}
 	if !verification.Verify(imageVerificationRequest.PhotoReal.ImageBytes, imageVerificationRequest.PhotoPassport.ImageBytes) {
 		return context.JSON(http.StatusBadRequest, map[string]any{
-			"msg": "Verification of the provided photo failed",
+			"msg": messages.VERIFICATION_PHOTO_FAILED,
 		})
 	}
 	hashRealPhoto := cryptography.PoseidonHash(imageVerificationRequest.PhotoReal.ImageBytes)
@@ -41,23 +42,23 @@ var MerkleTree *merkletree.MerkleTree
 func HandleProviderInclusionProof(context echo.Context) error {
 	if MerkleTree == nil {
 		return context.JSON(http.StatusInternalServerError, map[string]any{
-			"msg": "Merkle Tree is NOT defined on the server",
+			"msg": messages.MT_NOT_DEFINED,
 		})
 	}
-	leaveHash := big.NewInt(0)
-	leaveHashString := context.Param("leaveHash")
+	leafHash := big.NewInt(0)
+	leafHashString := context.Param("leafHash")
 
-	if leaveHashString == "" {
+	if leafHashString == "" {
 		return context.JSON(http.StatusBadRequest, map[string]any{
-			"msg": "Unable to retrieve leaveHash param",
+			"msg": messages.UNABLE_TO_FIND_LEAFHASH_PARAM,
 		})
 	}
-	leaveHash.SetString(leaveHashString, 10)
-	branch, order, isOk := MerkleTree.GetMerkleBranch(leaveHash)
+	leafHash.SetString(leafHashString, 10)
+	branch, order, isOk := MerkleTree.GetMerkleBranch(leafHash)
 
 	if !isOk {
 		return context.JSON(http.StatusBadRequest, map[string]any{
-			"msg": "Unable to find requested leave",
+			"msg": messages.UNABLE_TO_FIND_LEAF,
 		})
 	}
 	return context.JSON(http.StatusOK, map[string]any{

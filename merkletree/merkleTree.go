@@ -65,6 +65,10 @@ func (mt *MerkleTree) PrintMerkleTree() {
 	}
 }
 
+func (mt *MerkleTree) GetMerkleRoot() *big.Int {
+	return mt.Tree[0]
+}
+
 // 3 >= 8 / 2 - 1
 //      0
 //   1     2
