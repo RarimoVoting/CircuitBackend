@@ -22,6 +22,14 @@ func NewMerkleTree(treeDepth int) *MerkleTree {
 	return mt
 }
 
+func (mt *MerkleTree) BuildMerkleTreeMock() {
+	keyArray := make([]*big.Int, mt.LEAVES_SIZE)
+	for i := 0; i < mt.LEAVES_SIZE; i++ {
+		keyArray[i] = cryptography.PoseidonHashPoint(cryptography.GetPublicKey())
+	}
+	mt.BuildMerkleTree(keyArray)
+}
+
 func (mt *MerkleTree) BuildMerkleTree(array []*big.Int) {
 	mt.Leaves = array
 	size := len(array)

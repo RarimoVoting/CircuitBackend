@@ -10,6 +10,7 @@ import (
 func main() {
 	e := echo.New()
 	requests.MerkleTree = merkletree.NewMerkleTree(4)
+	requests.MerkleTree.BuildMerkleTreeMock()
 
 	e.GET("/verifyPhoto", requests.HandleVerifyPhoto)
 	e.GET("/providerInclusionProof/:leafHash", requests.HandleProviderInclusionProof)

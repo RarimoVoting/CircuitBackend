@@ -68,7 +68,14 @@ func HandleProviderInclusionProof(context echo.Context) error {
 }
 
 func HandleProviderMerkleRoot(context echo.Context) error {
-	return nil
+	if MerkleTree == nil {
+		return context.JSON(http.StatusInternalServerError, map[string]any{
+			"msg": messages.MT_NOT_DEFINED,
+		})
+	}
+	return context.JSON(http.StatusOK, map[string]any{
+		"root": MerkleTree.GetMerkleRoot(),
+	})
 }
 
 func HandleProviderList(context echo.Context) error {
