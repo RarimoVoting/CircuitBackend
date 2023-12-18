@@ -16,7 +16,6 @@ func main() {
 	e.GET("/providerInclusionProof/:leafHash", requests.HandleProviderInclusionProof)
 	e.GET("/providerMerkleRoot", requests.HandleProviderMerkleRoot)
 	e.GET("/providerList", requests.HandleProviderList)
-	// e.GET("/circuitTestInputs", requests.HandleCircuitTestInput)
 	e.POST("/updateMerkleRoot", requests.HandleUpdateMerkleRoot)
 
 	e.Start(":3000")
