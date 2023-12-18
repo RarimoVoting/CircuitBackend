@@ -1,6 +1,7 @@
 package main
 
 import (
+	"redsunsetbackend/merkletree"
 	"redsunsetbackend/requests"
 
 	"github.com/labstack/echo/v4"
@@ -8,11 +9,12 @@ import (
 
 func main() {
 	e := echo.New()
+	requests.MerkleTree = merkletree.NewMerkleTree(4)
 
 	e.GET("/verifyPhoto", requests.HandleVerifyPhoto)
-	e.GET("/signerInclusionProof", requests.HandleSignerInclusionProof)
-	e.GET("/providerMerkleRoot", requests.HandleSignerInclusionProof)
-	e.GET("/providerList", requests.HandleSignerInclusionProof)
+	e.GET("/providerInclusionProof/:leafHash", requests.HandleProviderInclusionProof)
+	e.GET("/providerMerkleRoot", requests.HandleProviderMerkleRoot)
+	e.GET("/providerList", requests.HandleProviderList)
 	e.POST("/updateMerkleRoot", requests.HandleUpdateMerkleRoot)
 
 	e.Start(":3000")

@@ -2,8 +2,10 @@ package requests
 
 import (
 	"encoding/json"
+	"math/big"
 	"net/http"
 	"redsunsetbackend/cryptography"
+	"redsunsetbackend/merkletree"
 	"redsunsetbackend/verification"
 
 	"github.com/labstack/echo/v4"
@@ -34,8 +36,34 @@ func HandleVerifyPhoto(context echo.Context) error {
 	})
 }
 
-func HandleSignerInclusionProof(context echo.Context) error {
-	return nil
+var MerkleTree *merkletree.MerkleTree
+
+func HandleProviderInclusionProof(context echo.Context) error {
+	if MerkleTree == nil {
+		return context.JSON(http.StatusInternalServerError, map[string]any{
+			"msg": "Merkle Tree is NOT defined on the server",
+		})
+	}
+	leaveHash := big.NewInt(0)
+	leaveHashString := context.Param("leaveHash")
+
+	if leaveHashString == "" {
+		return context.JSON(http.StatusBadRequest, map[string]any{
+			"msg": "Unable to retrieve leaveHash param",
+		})
+	}
+	leaveHash.SetString(leaveHashString, 10)
+	branch, order, isOk := MerkleTree.GetMerkleBranch(leaveHash)
+
+	if !isOk {
+		return context.JSON(http.StatusBadRequest, map[string]any{
+			"msg": "Unable to find requested leave",
+		})
+	}
+	return context.JSON(http.StatusOK, map[string]any{
+		"branch": branch,
+		"order":  order,
+	})
 }
 
 func HandleProviderMerkleRoot(context echo.Context) error {
