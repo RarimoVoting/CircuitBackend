@@ -32,8 +32,10 @@ func HandleVerifyPhoto(context echo.Context) error {
 	signature := cryptography.EddsaSignature(verificationHash)
 
 	return context.JSON(http.StatusOK, map[string]any{
-		"photoHash": verificationHash.String(),
-		"signature": signature,
+		"hashRealPhoto":     hashRealPhoto.String(),
+		"hashPassportPhoto": hashPassportPhoto.String(),
+		"photoHash":         verificationHash.String(),
+		"signature":         signature,
 	})
 }
 
