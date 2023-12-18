@@ -77,6 +77,10 @@ func (mt *MerkleTree) GetMerkleRoot() *big.Int {
 	return mt.Tree[0]
 }
 
+func (mt *MerkleTree) GetProviderList() []*big.Int {
+	return mt.Leaves
+}
+
 // 3 >= 8 / 2 - 1
 //      0
 //   1     2

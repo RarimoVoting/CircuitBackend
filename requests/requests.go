@@ -79,7 +79,14 @@ func HandleProviderMerkleRoot(context echo.Context) error {
 }
 
 func HandleProviderList(context echo.Context) error {
-	return nil
+	if MerkleTree == nil {
+		return context.JSON(http.StatusInternalServerError, map[string]any{
+			"msg": messages.MT_NOT_DEFINED,
+		})
+	}
+	return context.JSON(http.StatusOK, map[string]any{
+		"providers": MerkleTree.GetProviderList(),
+	})
 }
 
 func HandleUpdateMerkleRoot(context echo.Context) error {
