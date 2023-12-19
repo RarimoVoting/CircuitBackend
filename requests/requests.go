@@ -31,11 +31,25 @@ func HandleVerifyPhoto(context echo.Context) error {
 
 	signature := cryptography.EddsaSignature(verificationHash)
 
+	pubKeyHash := cryptography.PoseidonHashLeftRight(signature.A.X, signature.A.Y)
+
+	branch, order, isOk := MerkleTree.GetMerkleBranch(pubKeyHash)
+
+	if !isOk {
+		return context.JSON(http.StatusInternalServerError, map[string]any{
+			"msg": messages.UNABLE_TO_VERIFY_PROVIDER,
+		})
+	}
+
 	return context.JSON(http.StatusOK, map[string]any{
 		"hashRealPhoto":     hashRealPhoto.String(),
 		"hashPassportPhoto": hashPassportPhoto.String(),
 		"photoHash":         verificationHash.String(),
 		"signature":         signature,
+		"root":              MerkleTree.GetMerkleRoot(),
+		"branch":            branch,
+		"order":             order,
+		"pubKeyHash":        pubKeyHash,
 	})
 }
 
