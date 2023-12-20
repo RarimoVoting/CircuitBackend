@@ -31,7 +31,7 @@ func HandleVerifyPhoto(context echo.Context) error {
 
 	signature := cryptography.EddsaSignature(verificationHash)
 
-	pubKeyHash := cryptography.PoseidonHashLeftRight(signature.A.X, signature.A.Y)
+	pubKeyHash := cryptography.PoseidonHashLeftRight(cryptography.GetPublicKey().X, cryptography.GetPublicKey().Y)
 
 	branch, order, isOk := MerkleTree.GetMerkleBranch(pubKeyHash)
 
