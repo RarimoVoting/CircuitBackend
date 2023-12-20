@@ -18,5 +18,5 @@ func main() {
 	e.GET("/providerList", requests.HandleProviderList)
 	e.POST("/updateMerkleRoot", requests.HandleUpdateMerkleRoot)
 
-	e.Start(":3000")
+	e.Start(":80")
 }
