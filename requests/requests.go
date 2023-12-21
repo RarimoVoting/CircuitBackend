@@ -50,6 +50,7 @@ func HandleVerifyPhoto(context echo.Context) error {
 		"branch":            branch,
 		"order":             order,
 		"pubKeyHash":        pubKeyHash,
+		"pubKey":            cryptography.GetPublicKey(),
 	})
 }
 
