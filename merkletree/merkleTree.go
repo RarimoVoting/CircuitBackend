@@ -61,7 +61,7 @@ func (mt *MerkleTree) GetMerkleBranch(leafValue *big.Int) ([]*big.Int, int, bool
 				answer = append(answer, mt.Tree[pair])
 				index = index / 2
 			}
-			return answer, mt.LEAVES_SIZE + i, true
+			return answer, i, true
 		}
 	}
 	return []*big.Int{}, 0, false

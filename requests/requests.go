@@ -2,6 +2,7 @@ package requests
 
 import (
 	"encoding/json"
+	"fmt"
 	"math/big"
 	"net/http"
 	"redsunsetbackend/cryptography"
@@ -41,16 +42,20 @@ func HandleVerifyPhoto(context echo.Context) error {
 		})
 	}
 
+	providerSignatureView := []string{signature.R8.X.String(), signature.R8.Y.String(), cryptography.GetPublicKey().X.String(), cryptography.GetPublicKey().Y.String(), signature.S.String()}
+	providerMerkleBranchView := []string{}
+
+	for i := 0; i < len(branch); i++ {
+		providerMerkleBranchView = append(providerMerkleBranchView, branch[i].String())
+	}
+
 	return context.JSON(http.StatusOK, map[string]any{
-		"hashRealPhoto":     hashRealPhoto.String(),
-		"hashPassportPhoto": hashPassportPhoto.String(),
-		"photoHash":         verificationHash.String(),
-		"signature":         signature,
-		"root":              MerkleTree.GetMerkleRoot(),
-		"branch":            branch,
-		"order":             order,
-		"pubKeyHash":        pubKeyHash,
-		"pubKey":            cryptography.GetPublicKey(),
+		"realPhotoHash":        hashRealPhoto.String(),
+		"passPhotoHash":        hashPassportPhoto.String(),
+		"providerSignature":    providerSignatureView,
+		"providerMerkleRoot":   MerkleTree.GetMerkleRoot().String(),
+		"providerMerkleBranch": providerMerkleBranchView,
+		"providerMerkleOrder":  fmt.Sprint(order),
 	})
 }
 
