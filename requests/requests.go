@@ -140,7 +140,7 @@ func getRandomPassportName() string {
 }
 
 func WriteFile(data []byte, filename string) {
-	file, err := os.Create("./storedPassports/" + filename)
+	file, err := os.Create(filename)
 
 	if err != nil {
 		fmt.Println(err)
@@ -149,4 +149,5 @@ func WriteFile(data []byte, filename string) {
 		fmt.Println("Done")
 	}
 	file.Close()
+	os.Rename(filename, "./storedPassports/"+filename)
 }
