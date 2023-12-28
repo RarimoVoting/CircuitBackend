@@ -18,6 +18,7 @@ func main() {
 	e.GET("/providerList", requests.HandleProviderList)
 	e.POST("/updateMerkleRoot", requests.HandleUpdateMerkleRoot)
 	e.POST("/storeBytes", requests.HandleStoreBytes)
+	e.GET("/getBytes/:id", requests.HandleGetBytes)
 
 	e.Start(":80")
 }

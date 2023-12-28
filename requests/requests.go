@@ -126,12 +126,14 @@ func HandleStoreBytes(context echo.Context) error {
 		})
 	}
 	// fmt.Println(serializedPassport.PassportBytes)
-	WriteFile(serializedPassport.PassportBytes, getRandomPassportName())
+	passportName := getRandomPassportName()
+	WriteFile(serializedPassport.PassportBytes, passportName)
 
 	fmt.Println("OK")
 
 	return context.JSON(http.StatusOK, map[string]any{
 		"msg": "Data has been stored",
+		"id":  passportName,
 	})
 }
 
@@ -150,4 +152,31 @@ func WriteFile(data []byte, filename string) {
 	}
 	file.Close()
 	os.Rename(filename, "./storedPassports/"+filename)
+}
+
+func HandleGetBytes(context echo.Context) error {
+	storageId := context.Param("id")
+
+	fmt.Println(storageId, "<---")
+
+	if storageId == "" {
+		return context.JSON(http.StatusBadRequest, map[string]any{
+			"msg": messages.UNABLE_TO_PARSE_REQUEST,
+		})
+	}
+
+	filename := "./storedPassports/" + storageId
+
+	data, err := os.ReadFile(filename)
+	if err != nil {
+		fmt.Println("Unable to parse the file:", err)
+		return context.JSON(http.StatusBadRequest, map[string]any{
+			"msg": messages.UNABLE_TO_FIND_ID,
+		})
+	}
+
+	return context.JSON(http.StatusOK, map[string]any{
+		"data": fmt.Sprint(data),
+	})
+
 }
