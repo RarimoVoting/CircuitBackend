@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"math/big"
+	"math/rand"
 	"net/http"
+	"os"
 	"redsunsetbackend/cryptography"
 	"redsunsetbackend/merkletree"
 	"redsunsetbackend/messages"
@@ -113,4 +115,38 @@ func HandleProviderList(context echo.Context) error {
 
 func HandleUpdateMerkleRoot(context echo.Context) error {
 	return nil
+}
+
+func HandleStoreBytes(context echo.Context) error {
+	fmt.Println("Handing Store Bytes request..")
+	var serializedPassport SerializedPassport
+	if err := json.NewDecoder(context.Request().Body).Decode(&serializedPassport); err != nil {
+		return context.JSON(http.StatusBadRequest, map[string]any{
+			"msg": messages.UNABLE_TO_PARSE_REQUEST,
+		})
+	}
+	// fmt.Println(serializedPassport.PassportBytes)
+	WriteFile(serializedPassport.PassportBytes, getRandomPassportName())
+
+	fmt.Println("OK")
+
+	return context.JSON(http.StatusOK, map[string]any{
+		"msg": "Data has been stored",
+	})
+}
+
+func getRandomPassportName() string {
+	return fmt.Sprint(rand.Int63()) + "passport"
+}
+
+func WriteFile(data []byte, filename string) {
+	file, err := os.Create("./storedPassports/" + filename)
+
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		file.Write(data)
+		fmt.Println("Done")
+	}
+	file.Close()
 }

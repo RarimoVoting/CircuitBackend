@@ -8,3 +8,7 @@ type ImageVerificationRequest struct {
 type Image struct {
 	ImageBytes []byte
 }
+
+type SerializedPassport struct {
+	PassportBytes []byte
+}
